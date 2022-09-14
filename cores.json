@@ -1,0 +1,6 @@
+{
+  "megadrive": {
+    "permittedExtensions": [".md", ".smd"],
+    "core": "genesis_plus_gx_libretro.dylib"
+  }
+}

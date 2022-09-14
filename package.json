@@ -1,0 +1,15 @@
+{
+  "name": "attractmode",
+  "version": "1.0.0",
+  "description": "A playlist of classic game attract modes that you can drop into at any point",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {},
+  "devDependencies": {
+    "standard": "^17.0.0"
+  }
+}
