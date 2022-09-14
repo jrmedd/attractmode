@@ -1,6 +1,5 @@
 const locateRoms = require('./locateRoms.js')
 const selectCore = require('./selectCore.js')
-const cores = require('./cores.json')
 const os = require('os')
 const { spawn } = require('child_process')
 
@@ -24,7 +23,7 @@ function randomGame () {
 
 function loadAnother (process) {
   randomGame()
-  process.kill()
+  setTimeout(() => process.kill(), 250)
 }
 
 randomGame()
