@@ -1,3 +1,4 @@
+const UniqueRandom = require('./UniqueRandom')
 const attractLengths = require('./attractLengths.json')
 const locateRoms = require('./locateRoms.js')
 const selectCore = require('./selectCore.js')
@@ -16,12 +17,14 @@ fs.writeFileSync(`${romsPath}/customConfig.cfg`, `video_font_enable = "false"\np
 
 const roms = locateRoms(romsPath)
 
+const random = new UniqueRandom(roms.length)
+
 function randomGame () {
-  const selectedRom = roms[parseInt(Math.random() * roms.length)]
+  const selectedRom = roms[random.new]
   const playLength = attractLengths[selectedRom]
   const romExtension = selectedRom.match(/\.\S+/)
   const useCore = selectCore(romExtension[0])
-  const emulation = spawn(retroarchPath, [`--appendconfig="${romsPath}/customConfig.cfg"`, '-L', `"${corePath}${useCore.core}"`, `"${romsPath}${selectedRom}"`], {
+  const emulation = spawn(retroarchPath, ['-f', `--appendconfig="${romsPath}/customConfig.cfg"`, '-L', `"${corePath}${useCore.core}"`, `"${romsPath}${selectedRom}"`], {
     stdio: 'inherit',
     shell: true
   })
