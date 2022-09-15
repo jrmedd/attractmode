@@ -3,12 +3,10 @@ const attractLengths = require('./attractLengths.json')
 const locateRoms = require('./locateRoms.js')
 const selectCore = require('./selectCore.js')
 const fs = require('fs')
-const os = require('os')
 const { spawn } = require('child_process')
+const kill = require('tree-kill')
 
-const homePath = os.homedir()
-const retroarchPath = '/Applications/RetroArch.app/Contents/MacOS/RetroArch'
-const corePath = `${homePath}/Library/Application Support/RetroArch/cores/`
+const retroarchPath = process.env.RETROARCH_PATH
 
 const args = [...process.argv.slice(2)]
 
@@ -17,6 +15,8 @@ fs.writeFileSync(`${romsPath}/customConfig.cfg`, `video_font_enable = "false"\np
 
 const roms = locateRoms(romsPath)
 
+console.debug(roms)
+
 const random = new UniqueRandom(roms.length)
 
 function randomGame () {
@@ -24,16 +24,16 @@ function randomGame () {
   const playLength = attractLengths[selectedRom]
   const romExtension = selectedRom.match(/\.\S+/)
   const useCore = selectCore(romExtension[0])
-  const emulation = spawn(retroarchPath, ['-f', `--appendconfig="${romsPath}/customConfig.cfg"`, '-L', `"${corePath}${useCore.core}"`, `"${romsPath}${selectedRom}"`], {
+  const emulation = spawn(retroarchPath, ['-f', `--appendconfig="${romsPath}/customConfig.cfg"`, '-L', `"${useCore.core}"`, `"${romsPath}${selectedRom}"`], {
     stdio: 'inherit',
     shell: true
   })
-  setTimeout(loadAnother, playLength, emulation)
+  setTimeout(loadAnother, playLength, emulation.pid)
 }
 
-function loadAnother (process) {
+function loadAnother (previousPid) {
   randomGame()
-  setTimeout(() => process.kill(), 250)
+  setTimeout(() => kill(previousPid), 250)
 }
 
 randomGame()
