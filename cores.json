@@ -1,6 +1,22 @@
 {
+  "master-system": {
+    "permittedExtensions": [".sms"],
+    "core": "genesis_plus_gx_libretro"
+  },
   "megadrive": {
     "permittedExtensions": [".md", ".smd"],
     "core": "genesis_plus_gx_libretro"
+  },
+  "n64": {
+    "permittedExtensions": [".n64", ".z64"],
+    "core": "mupen64plus_next_libretro"
+  },
+  "nes": {
+    "permittedExtensions": [".nes"],
+    "core": "nestopia_libretro"
+  },
+  "snes": {
+    "permittedExtensions": [".sfc"],
+    "core": "bsnes_mercury_performance_libretro"
   }
 }
