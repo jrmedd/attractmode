@@ -15,6 +15,10 @@
     "permittedExtensions": [".nes"],
     "core": "nestopia_libretro"
   },
+  "psx": {
+    "permittedExtensions": [".cue"],
+    "core": "pcsx_rearmed_libretro"
+  },
   "snes": {
     "permittedExtensions": [".sfc"],
     "core": "bsnes_mercury_performance_libretro"

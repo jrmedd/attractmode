@@ -20,7 +20,7 @@ fs.writeFileSync(`${romsPath}/customConfig.cfg`, `video_font_enable = "false"\np
 
 const roms = locateRoms(romsPath)
 
-const random = new UniqueRandom(roms.length, parseInt(roms.length/2))
+const random = new UniqueRandom(roms.length, Math.floor(roms.length*0.75))
 
 function randomGame () {
   const selectedRom = roms[random.new]
@@ -38,7 +38,7 @@ function randomGame () {
 function loadAnother (previousPid) {
   randomGame()
   const focus = spawn('wmctrl', [' -a',' RetroArch'],{shell:true})
-  setTimeout(() => kill(previousPid), 250)
+  setTimeout(() => kill(previousPid), 500)
 }
 
 randomGame()
