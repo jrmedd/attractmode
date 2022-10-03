@@ -24,7 +24,7 @@ const random = new UniqueRandom(roms.length, parseInt(roms.length/2))
 
 function randomGame () {
   const selectedRom = roms[random.new]
-  const playLength = attractLengths[selectedRom] ?? 30000
+  const playLength = attractLengths[selectedRom] ?? 60000
   const romExtension = selectedRom.match(/\.\S+/)
   const useCore = selectCore(romExtension[0])
   const emulation = spawn(retroarchPath, ['-f', `--appendconfig="${romsPath}/customConfig.cfg"`, '-L', `"${corePath}/${useCore.core}.so"`, `"${romsPath}${selectedRom}"`], {

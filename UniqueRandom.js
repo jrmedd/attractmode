@@ -9,10 +9,8 @@ class UniqueRandom {
     do {
       newNumber = parseInt(Math.random() * this.max)
     } while (this.buffer.includes(newNumber))
-    this.last = newNumber
-    this.buffer.map((value, index) => {
-      index < (this.buffer.length - 1)  ? this.buffer[index] = this.buffer[index + 1] : this.buffer[index] = newNumber
-    })
+    this.buffer.shift()
+    this.buffer.push(newNumber)
     return newNumber
   }
 }
