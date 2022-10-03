@@ -2,13 +2,16 @@ const UniqueRandom = require('./UniqueRandom')
 const attractLengths = require('./attractLengths.json')
 const locateRoms = require('./locateRoms.js')
 const selectCore = require('./selectCore.js')
-const fs = require('fs')
 const os = require('os')
-const { spawn } = require('child_process')
+const fs = require('fs')
+const { spawn, execSync } = require('child_process')
+const kill = require('tree-kill')
 
+require('dotenv').config()
+const retroarchPath = process.env.RETROARCH_PATH
 const homePath = os.homedir()
-const retroarchPath = '/Applications/RetroArch.app/Contents/MacOS/RetroArch'
-const corePath = `${homePath}/Library/Application Support/RetroArch/cores/`
+
+const corePath = `${homePath}/.config/retroarch/cores`
 
 const args = [...process.argv.slice(2)]
 
@@ -17,23 +20,26 @@ fs.writeFileSync(`${romsPath}/customConfig.cfg`, `video_font_enable = "false"\np
 
 const roms = locateRoms(romsPath)
 
-const random = new UniqueRandom(roms.length)
+const random = new UniqueRandom(roms.length, parseInt(roms.length/2))
 
 function randomGame () {
   const selectedRom = roms[random.new]
-  const playLength = attractLengths[selectedRom]
+  const playLength = attractLengths[selectedRom] ?? 60000
   const romExtension = selectedRom.match(/\.\S+/)
   const useCore = selectCore(romExtension[0])
-  const emulation = spawn(retroarchPath, ['-f', `--appendconfig="${romsPath}/customConfig.cfg"`, '-L', `"${corePath}${useCore.core}"`, `"${romsPath}${selectedRom}"`], {
+  const emulation = spawn(retroarchPath, ['-f', `--appendconfig="${romsPath}/customConfig.cfg"`, '-L', `"${corePath}/${useCore.core}.so"`, `"${romsPath}${selectedRom}"`], {
     stdio: 'inherit',
     shell: true
   })
-  setTimeout(loadAnother, playLength, emulation)
+  const focus = spawn('wmctrl', [' -a',' RetroArch'],{shell:true})
+  setTimeout(loadAnother, playLength, emulation.pid)
 }
 
-function loadAnother (process) {
+function loadAnother (previousPid) {
   randomGame()
-  setTimeout(() => process.kill(), 250)
+  const focus = spawn('wmctrl', [' -a',' RetroArch'],{shell:true})
+  setTimeout(() => kill(previousPid), 250)
 }
 
 randomGame()
+

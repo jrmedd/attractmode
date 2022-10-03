@@ -8,8 +8,11 @@
   },
   "author": "",
   "license": "ISC",
-  "dependencies": {},
+  "dependencies": {
+    "tree-kill": "^1.2.2"
+  },
   "devDependencies": {
+    "dotenv": "^16.0.2",
     "standard": "^17.0.0"
   }
 }
